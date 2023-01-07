@@ -19,17 +19,15 @@ export const defaultInnerBorderOpts = {
   radius: 130,
 }
 
-
 export const defaultInnerLoopLineOpts = {
   visible: false,
   width: 2,
   radius: 80,
 }
 
-
 export const defaultFiveStarOpts = {
   visible: true,
-  size: 30
+  size: 30,
 }
 
 export const defaultTextOpts = {
@@ -37,21 +35,21 @@ export const defaultTextOpts = {
   fontSize: 30,
   fontWeight: 600,
   radius: 120,
-  startDegree: 25
-};
+  startDegree: 25,
+}
 
 export const defaultSubTextOpts = {
   visible: true,
   fontSize: 24,
   fontWeight: 600,
   distance: 75,
-};
+}
 
 export const defaultCenterTextOpts = {
   visible: false,
   fontSize: 24,
   fontWeight: 600,
-};
+}
 
 export const defaultSerNoOpts = {
   visible: true,
@@ -59,5 +57,5 @@ export const defaultSerNoOpts = {
   fontWeight: 600,
   radius: 120,
   text: '01234566667890',
-  startDegree: 45
-};
+  startDegree: 45,
+}

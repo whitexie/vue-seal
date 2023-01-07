@@ -7,6 +7,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    BorderFormItem: typeof import('./src/components/BorderFormItem.vue')['default']
+    CommonFormItem: typeof import('./src/components/CommonFormItem.vue')['default']
+    ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     Seal: typeof import('./src/components/Seal.vue')['default']
   }
 }
