@@ -126,7 +126,11 @@ export class Seal {
 
     this.drawFiveStar(this.fiveStarOpts)
 
-    this.writeText(this.textOpts)
+    if (this.options.type === 'personal') {
+      this.drawName()
+    } else {
+      this.writeText(this.textOpts)
+    }
     this.writeSubText(this.subTextOpts)
     this.writeCenterText(this.centerTextOpts)
     this.writeSerNo(this.serNoOpts)
@@ -166,10 +170,63 @@ export class Seal {
   private drawBorder(opts: Required<BorderOptions>) {
     if (!opts.visible || !this.canvas) return
     const maxRadius = this.canvas.width / 2
+    const { shape } = opts
+    if (shape === 'circle') {
+      this.drawCircle(opts.width, opts.color, {
+        radius: opts.radius > maxRadius ? maxRadius : opts.radius,
+      })
+    } else if (shape === 'square') {
+      this.drawSquare(opts.width, opts.color)
+    } else if (shape === 'ellipse') {
+      this.drawEllipse(opts.width, opts.color, {
+        radius: opts.radius > maxRadius ? maxRadius : opts.radius,
+      })
+    }
+  }
+  /**
+   * 绘制矩形外框
+   * @param lineWidth 线宽
+   * @param color 颜色
+   * @returns
+   */
+  drawSquare(lineWidth: number, color: string) {
+    if (!this.canvas || !this.context) return
+    const {
+      context: ctx,
+      canvas: { width, height },
+    } = this
+    ctx.strokeStyle = color
+    ctx.lineWidth = lineWidth
+    ctx.strokeRect(10, 10, width - 20, height - 20)
+  }
 
-    this.drawCircle(opts.width, opts.color, {
-      radius: opts.radius > maxRadius ? maxRadius : opts.radius,
+  drawName(): void {
+    if (!this.canvas || !this.context) return
+    const {
+      context: ctx,
+      canvas: { width },
+      borderOpts: { width: borderLineWidth },
+      textOpts: { text: name, color },
+    } = this
+    const text = name.length < 4 ? `${name}印` : name.slice(0, 4)
+    const fontSize = (width - 10 - borderLineWidth) / 2 - 10
+    ctx.fillStyle = color
+    ctx.font = getFontStr({
+      fontWeight: 'bold',
+      fontSize,
     })
+    ctx.textBaseline = 'middle'
+    ctx.textAlign = 'center'
+    let x = width / 4 + borderLineWidth
+    let y = width / 4
+    ctx.fillText(text[2], x, y)
+
+    x = (width / 4) * 3 - borderLineWidth
+    ctx.fillText(text[0], x, y)
+    y = (width / 4) * 3 - borderLineWidth * 2
+    ctx.fillText(text[1], x, y)
+    x = width / 4 + borderLineWidth
+    ctx.fillText(text[3], x, y)
   }
 
   /**
@@ -400,53 +457,25 @@ export class Seal {
       },
     }: DrawCircleOptions,
   ) {
+    console.log('drawEllipse')
     if (!this.canvas || !this.context) return
-    const ctx = this.context
+    const {
+      context: ctx,
+      canvas: { width: canvasWdith, height: canvasHeight },
+    } = this
     const { x, y } = circleCenter
-    const { width: canvasWidth, height: canvasHeight } = this.canvas
-    const k = 0.5522848
-    const ox = canvasWidth * k // 水平控制点偏移量
-    const oy = canvasHeight * k // 垂直控制点偏移量
-
-    this.context.lineWidth = width
-    this.context.strokeStyle = color
-
+    ctx.lineWidth = width
+    ctx.strokeStyle = color
     ctx.beginPath()
-    //从椭圆的左端点开始顺时针绘制四条三次贝塞尔曲线
-    ctx.moveTo(x - canvasWidth, y)
-    ctx.bezierCurveTo(
-      x - canvasWidth,
-      y - oy,
-      x - ox,
-      y - canvasHeight,
+    ctx.ellipse(
       x,
-      y - canvasHeight,
-    )
-    ctx.bezierCurveTo(
-      x + ox,
-      y - canvasHeight,
-      x + canvasWidth,
-      y - oy,
-      x + canvasWidth,
       y,
+      canvasWdith / 2 - 10 - width / 2,
+      canvasHeight / 2 - 10 - width / 2,
+      0,
+      0,
+      2 * Math.PI,
     )
-    ctx.bezierCurveTo(
-      x + canvasWidth,
-      y + oy,
-      x + ox,
-      y + canvasHeight,
-      x,
-      y + canvasHeight,
-    )
-    ctx.bezierCurveTo(
-      x - ox,
-      y + canvasHeight,
-      x - canvasWidth,
-      y + oy,
-      x - canvasWidth,
-      y,
-    )
-    ctx.closePath()
     ctx.stroke()
   }
 

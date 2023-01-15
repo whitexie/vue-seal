@@ -12,6 +12,7 @@ import {
   ElSelect,
   ElSwitch,
   ElScrollbar,
+  ElColorPicker,
 } from 'element-plus'
 
 // 深度遍历类型，所有可选属性都变成必须属性
@@ -42,20 +43,20 @@ interface FormOptions extends OmitOptions {
 }
 
 const defaultOption: FormOptions = {
-  type: 'company',
-  shape: 'circle',
+  type: 'personal',
+  shape: 'square',
   showTransparent: true,
   color: 'red',
-  width: 300,
-  height: 300,
+  width: 400,
+  height: 400,
   border: {
     visible: true,
     color: 'red',
-    width: 6,
+    width: 10,
     radius: 140,
   },
   innerBorder: {
-    visible: true,
+    visible: false,
     color: 'red',
     width: 1,
     radius: 130,
@@ -66,12 +67,12 @@ const defaultOption: FormOptions = {
     width: 2,
     radius: 80,
   },
-  fiveStar: { visible: true, color: 'red', size: 30 },
+  fiveStar: { visible: false, color: 'red', size: 30 },
   text: {
     visible: true,
     color: 'red',
     radius: 120,
-    text: '上海某某某网络科技有限公司',
+    text: '夏卫星',
     fontSize: 30,
     startDegree: 25,
     fontWeight: 600,
@@ -111,7 +112,7 @@ const form = ref<FormOptions>(cloneDeep(defaultOption))
     <div
       class="flex justify-center w-80vw border border-1 border-solid border-#ddd"
     >
-      <div class="preview flex-c-c w-320px mt-10px">
+      <div class="preview flex-c-c mt-10px">
         <Seal v-bind="form" />
       </div>
       <div class="option-edit flex-1 p-10px">
@@ -131,6 +132,9 @@ const form = ref<FormOptions>(cloneDeep(defaultOption))
                 <ElOption label="椭圆" value="ellipse" />
                 <ElOption label="方形" value="square" />
               </ElSelect>
+            </ElFormItem>
+            <ElFormItem label="印章颜色">
+              <ElColorPicker v-model="form.color" />
             </ElFormItem>
             <ElFormItem label="显示透明背景">
               <ElSwitch v-model="form.showTransparent" />
